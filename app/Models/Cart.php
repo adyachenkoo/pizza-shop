@@ -8,8 +8,8 @@ class Cart extends Model
 {
     protected $table = "carts";
 
-    protected $fillable = [
-        'user_id',
-        'product_id',
-    ];
+    public $timestamps = false;
+
+    protected $guarded = [];
+
 }

@@ -8,15 +8,15 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
-    public function __construct() 
-     {
+    public function __construct()
+    {
         $this->middleware('auth:api')->except('login');
     }
 
     public function login(Request $request)
     {
         $credentials = $request->only(['email', 'password']);
-        
+
         if(!$token = auth('api')->attempt($credentials)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
