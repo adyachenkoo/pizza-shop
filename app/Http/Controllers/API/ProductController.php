@@ -12,15 +12,22 @@ use App\Models\Product;
 class ProductController extends Controller
 {
     /**
+     * Метод для получения списка продуктов
      *
      * @param Request $request
-     *
+     * @return JsonResponse
      */
     public function index(Request $request): JsonResponse
     {
        return response()->json(Product::all());
     }
 
+    /**
+     * Метод для создания продукта
+     *
+     * @param StoreRequest $request
+     * @return JsonResponse
+     */
     public function store(StoreRequest $request): JsonResponse
     {
         $validatedData = $request->validated();
@@ -34,6 +41,13 @@ class ProductController extends Controller
         }
     }
 
+    /**
+     * Метод для обновления данных продукта
+     *
+     * @param UpdateRequest $request
+     * @param int $id
+     * @return JsonResponse
+     */
     public function update(UpdateRequest $request, int $id): JsonResponse
     {
         $validatedData = $request->validated();
@@ -47,6 +61,12 @@ class ProductController extends Controller
         }
     }
 
+    /**
+     * Метод для удаления продукта
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
     public function delete(int $id): JsonResponse
     {
         return response()->json((bool) Product::destroy($id));
