@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\User;
 
 use App\Http\Requests\Cart\AddRequest;
 use App\Http\Requests\Cart\DeleteRequest;
 use App\Models\Cart;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 
@@ -49,7 +48,17 @@ class CartController extends Controller
 
         $validatedData = $request->validated();
 
+        $cartItem = Cart::where('user_id', $userId)
+            ->where('product_id', $validatedData['product_id'])
+            ->exists();
+
         try {
+            if ($cartItem) {
+                return response()->json([
+                    'error' => 'Товар уже в корзине'
+                ]);
+            }
+
             Cart::create([
                 'user_id' => $userId,
                 'product_id' => $validatedData['product_id'],
@@ -57,7 +66,8 @@ class CartController extends Controller
             ]);
 
             return response()->json([
-                'status' => 'success'
+                'result' => 'success',
+                'message' => 'Товар добавлен в корзину'
             ]);
         } catch(\ErrorException $e) {
             return response()->json($e, 500);
@@ -84,7 +94,8 @@ class CartController extends Controller
                 ->delete();
 
             return response()->json([
-                'status' => 'success'
+                'result' => 'success',
+                'message' => 'Товар удален'
             ]);
         } catch(QueryException $e) {
             return response()->json($e, 500);
