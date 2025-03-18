@@ -56,7 +56,9 @@ class CartController extends Controller
                 'quantity' => 1,
             ]);
 
-            return response()->json('true');
+            return response()->json([
+                'status' => 'success'
+            ]);
         } catch(\ErrorException $e) {
             return response()->json($e, 500);
         }
@@ -81,7 +83,9 @@ class CartController extends Controller
             ])
                 ->delete();
 
-            return response()->json('true');
+            return response()->json([
+                'status' => 'success'
+            ]);
         } catch(QueryException $e) {
             return response()->json($e, 500);
         }
