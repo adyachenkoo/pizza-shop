@@ -4,18 +4,19 @@ namespace App\Http\Controllers\API\User;
 
 use App\Http\Requests\Cart\AddRequest;
 use App\Http\Requests\Cart\DeleteRequest;
-use App\Models\Cart;
+use App\Models\CartProduct;
+use App\Services\CartService;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 
-class CartController extends Controller
+class CartController extends UserBasedController
 {
 
-    public function __construct()
-    {
-        $this->middleware('auth:api');
+    public function __construct(
+        private readonly CartService $cartService
+    ) {
+
     }
 
     /**
@@ -27,7 +28,7 @@ class CartController extends Controller
     {
         $userId = Auth::id();
 
-        $cartItems = Cart::where('user_id', $userId)
+        $cartItems = CartProduct::where('user_id', $userId)
             ->get();
 
         return response()->json([
@@ -44,26 +45,17 @@ class CartController extends Controller
      */
     public function addProduct(AddRequest $request): JsonResponse
     {
-        $userId = Auth::id();
+        $user = Auth::user();
 
         $validatedData = $request->validated();
 
-        $cartItem = Cart::where('user_id', $userId)
-            ->where('product_id', $validatedData['product_id'])
-            ->exists();
-
         try {
-            if ($cartItem) {
-                return response()->json([
-                    'error' => 'Товар уже в корзине'
-                ]);
-            }
 
-            Cart::create([
-                'user_id' => $userId,
-                'product_id' => $validatedData['product_id'],
-                'quantity' => 1,
-            ]);
+            $this->cartService->addProduct(
+                $user,
+                $validatedData['product_id'],
+                $validatedData['quantity']
+            );
 
             return response()->json([
                 'result' => 'success',
@@ -87,7 +79,7 @@ class CartController extends Controller
         $validatedData = $request->validated();
 
         try {
-            Cart::where([
+            CartProduct::where([
                 'user_id' => $userId,
                 'product_id' => $validatedData['product_id']
             ])

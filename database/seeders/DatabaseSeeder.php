@@ -36,10 +36,10 @@ class DatabaseSeeder extends Seeder
         Category::insert([
             [
                 'id' => 1,
-                'name' => 'Пицца'
+                'name' => 'pizza'
             ], [
                 'id' => 2,
-                'name' => 'Напитки'
+                'name' => 'drink'
             ]
         ]);
 

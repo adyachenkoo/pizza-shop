@@ -22,7 +22,8 @@ class AddRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'product_id' => 'required|int'
+            'product_id' => 'required|int',
+            'quantity' => 'required|int'
         ];
     }
 
@@ -30,7 +31,9 @@ class AddRequest extends FormRequest
     {
         return [
             'product_id.required' => 'Не указан id продукта',
-            'product_id.int' => 'У поля id не числовой тип'
+            'product_id.int' => 'У поля id не числовой тип',
+            'quantity.required' => 'Не указано колиечство продукта',
+            'quantity.int' => 'У поля quantity не числовой тип',
         ];
     }
 }
