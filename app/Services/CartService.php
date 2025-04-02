@@ -68,6 +68,7 @@ class CartService
 
         $count = CartProduct::where('user_id', $user->id)
             ->where('category_id', $categoryId)
+            ->where('product_id', '!=', $productId)
             ->sum('quantity');
 
         $category = CategoryEnum::from($categoryId);
