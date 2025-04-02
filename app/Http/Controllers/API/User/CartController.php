@@ -32,7 +32,7 @@ class CartController extends UserBasedController
             ->get();
 
         return response()->json([
-            'status' => 'success',
+            'result' => true,
             'data' => $cartItems,
         ]);
     }
@@ -57,8 +57,8 @@ class CartController extends UserBasedController
                 $validatedData['quantity']
             );
 
-            if ($result['success'] === false) {
-                return responce()->json([
+            if ($result['result'] === false) {
+                return response()->json([
                     'result' => false,
                     'message' => $result['message']
                 ]);
@@ -93,7 +93,7 @@ class CartController extends UserBasedController
                 ->delete();
 
             return response()->json([
-                'result' => 'success',
+                'result' => true,
                 'message' => 'Товар удален'
             ]);
         } catch(QueryException $e) {

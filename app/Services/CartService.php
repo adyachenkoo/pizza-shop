@@ -29,12 +29,12 @@ class CartService
             ];
         }
 
-        $cartProduct = $user->cart()
+        $cartProduct = $user->cartProducts()
             ->where('product_id', $productId)
             ->first();
 
         if ($cartProduct) {
-            $cartProduct->update(['quantity', $quantity]);
+            $cartProduct->update(['quantity' => $quantity]);
 
             return [
                 'result' => true,
@@ -43,13 +43,13 @@ class CartService
         }
 
         $category = Category::where('id', $productId)
-            ->value('category_id');
+            ->value('id');
 
         $user->cartProducts()->create([
             'user_id' => $user->id,
             'product_id' => $productId,
+            'category_id' => $category,
             'quantity' => $quantity,
-            'category' => $category
         ]);
 
         return [

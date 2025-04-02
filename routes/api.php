@@ -26,7 +26,7 @@ Route::prefix('user')->middleware('auth:api')->group(function () {
     Route::prefix('cart')->controller(CartController::class)->group(function () {
         Route::get('/', [CartController::class, 'getUserCart']);
         Route::post('/add', [CartController::class, 'addProduct']);
-        Route::post('/delete', [CartController::class, 'deleteProduct']);
+        Route::delete('/delete', [CartController::class, 'deleteProduct']);
     });
 });
 
