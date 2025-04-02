@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\Admin\AdminProductController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\User\UserCartController;
+use App\Http\Controllers\API\User\UserOrderController;
 use App\Http\Controllers\API\User\UserProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -27,6 +28,11 @@ Route::prefix('user')->middleware('auth:api')->group(function () {
         Route::get('/', [UserCartController::class, 'getUserCart']);
         Route::post('/add', [UserCartController::class, 'addProduct']);
         Route::delete('/delete', [UserCartController::class, 'deleteProduct']);
+    });
+
+    Route::prefix('order')->group(function () {
+       Route::get('/', [UserOrderController::class, 'getOrders']);
+       Route::post('/create', [UserOrderController::class, 'createOrder']);
     });
 });
 

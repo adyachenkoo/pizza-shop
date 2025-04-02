@@ -78,13 +78,13 @@ class DatabaseSeeder extends Seeder
         OrderStatus::insert([
             [
                 'id' => '1',
-                'name' => 'Закрыт'
+                'name' => 'Closed'
             ],[
                 'id' => '2',
-                'name' => 'Доставляется'
+                'name' => 'Delivered'
             ],[
                 'id' => '3',
-                'name' => 'Готовится'
+                'name' => 'Preparing'
             ]
         ]);
     }

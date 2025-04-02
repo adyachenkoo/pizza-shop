@@ -17,8 +17,8 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users');
             $table->string('address');
             $table->string('phoneNumber');
-            $table->timestamp('deliveryTime');
-            $table->string('email');
+            $table->time('deliveryTime');
+            $table->string('email')->nullable();
             $table->integer('totalPrice');
             $table->text('comment')->nullable();
             $table->timestamps();

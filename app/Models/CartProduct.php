@@ -15,9 +15,9 @@ class CartProduct extends Model
 
     protected $guarded = [];
 
-    public function products(): HasMany
+    public function product(): BelongsTo
     {
-        return $this->hasMany(Product::class);
+        return $this->belongsTo(Product::class);
     }
 
     public function user(): BelongsTo
