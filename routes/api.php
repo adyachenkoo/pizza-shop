@@ -33,7 +33,7 @@ Route::prefix('user')->middleware('auth:api')->group(function () {
 Route::prefix('admin')->middleware('auth:api')->group(function () {
     Route::prefix('product')->controller(AdminProductController::class)->group(function () {
         Route::post('/create', 'store');
-        Route::post('/update/{id}', 'update');
+        Route::put('/update/{id}', 'update');
         Route::delete('/delete/{id}', 'delete');
     });
 });

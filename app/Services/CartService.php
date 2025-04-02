@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\CategoryEnum;
 use App\Models\CartProduct;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
@@ -17,15 +18,15 @@ class CartService
      * @param int $quantity
      * @return Collection
      */
-    public function addProduct(User $user, int $productId, int $quantity): Collection
+    public function addProduct(User $user, int $productId, int $quantity): array
     {
-        $canAddProduct = $this->canAddProduct($user, $productId, $quantity);
+        $canAddProduct = $this->checkLimit($user, $productId, $quantity);
 
         if(!$canAddProduct) {
-            return response([
-                'result' => 'false',
-                'message' => 'Вы можете добавить максимум '
-            ],  200);
+            return [
+                'result' => false,
+                'message' => 'Превышен допустимый лимит этой категории товаров'
+            ];
         }
 
         $cartProduct = $user->cart()
@@ -33,30 +34,44 @@ class CartService
             ->first();
 
         if ($cartProduct) {
-            $cartProduct->increment('quantity', $quantity);
-            return $cartProduct->fresh();
+            $cartProduct->update(['quantity', $quantity]);
+
+            return [
+                'result' => true,
+                'message' => 'Количество товара увеличено'
+            ];
         }
 
-        return $user->cartProducts()->create([
+        $category = Category::where('id', $productId)
+            ->value('category_id');
+
+        $user->cartProducts()->create([
+            'user_id' => $user->id,
             'product_id' => $productId,
-            'quantity' => $quantity
+            'quantity' => $quantity,
+            'category' => $category
         ]);
+
+        return [
+            'result' => true,
+            'message' => 'Товар добавлен в корзину'
+        ];
     }
 
     /**
      * Проверка лимитов на добавление продукта в корзину
      */
-    public function canAddProduct(User $user, int $productId, int $quantity): bool
+    public function checkLimit(User $user, int $productId, int $quantity): bool
     {
         $categoryId = Product::where('id', $productId)
             ->value('category_id');
 
-        $count = CartProduct::with('products')
-            ->where('user_id', 1)
-            ->get();
+        $count = CartProduct::where('user_id', $user->id)
+            ->where('category_id', $categoryId)
+            ->sum('quantity');
 
-        $product = CategoryEnum::from($productId);
+        $category = CategoryEnum::from($categoryId);
 
-        return $quantity < config("limits.$product->name");
+        return $quantity + (int) $count <= config("limits.$category->name");
     }
 }

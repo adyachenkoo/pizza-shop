@@ -51,14 +51,21 @@ class CartController extends UserBasedController
 
         try {
 
-            $this->cartService->addProduct(
+            $result = $this->cartService->addProduct(
                 $user,
                 $validatedData['product_id'],
                 $validatedData['quantity']
             );
 
+            if ($result['success'] === false) {
+                return responce()->json([
+                    'result' => false,
+                    'message' => $result['message']
+                ]);
+            }
+
             return response()->json([
-                'result' => 'success',
+                'result' => true,
                 'message' => 'Товар добавлен в корзину'
             ]);
         } catch(\ErrorException $e) {
