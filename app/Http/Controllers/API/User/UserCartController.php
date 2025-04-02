@@ -10,7 +10,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 
-class CartController extends UserBasedController
+class UserCartController extends UserBasedController
 {
 
     public function __construct(

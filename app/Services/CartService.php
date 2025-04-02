@@ -42,8 +42,8 @@ class CartService
             ];
         }
 
-        $category = Category::where('id', $productId)
-            ->value('id');
+        $category = Product::where('id', $productId)
+            ->value('category_id');
 
         $user->cartProducts()->create([
             'user_id' => $user->id,
