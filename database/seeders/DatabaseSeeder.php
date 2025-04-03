@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'firstname' => 'Test User',
             'email' => 'test@example.com',
+            'role_id' => 2
         ]);
 
         Category::insert([

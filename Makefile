@@ -43,6 +43,9 @@ clear:
 shell:
 	./vendor/bin/sail shell
 
+jwt_token:
+	./vendor/bin/sail artisan jwt:secret
+
 help:
 	@echo "Доступные команды:"
 	@echo "  make help         - Показать список команд"
