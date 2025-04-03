@@ -6,10 +6,16 @@ use App\Enums\OrderStatusEnum;
 use App\Http\Requests\Order\StoreRequest;
 use App\Models\CartProduct;
 use App\Models\Order;
+use App\Services\OrderService;
 use Illuminate\Http\Request;
 
 class UserOrderController extends UserBasedController
 {
+    public function __construct(
+        private readonly OrderService $orderService
+    ) {
+
+    }
     public function getOrders()
     {
         return response()->json([
@@ -25,16 +31,14 @@ class UserOrderController extends UserBasedController
 
         $user = auth()->user();
 
-        Order::create([
-           'status_id' => OrderStatusEnum::PREPARING->value,
-           'user_id' => $user->id,
-           'address' => $validatedData['address'],
-           'phoneNumber' => $validatedData['phoneNumber'],
-           'deliveryTime' => $validatedData['deliveryTime'],
-           'email' => $validatedData['email'] ?? null,
-           'totalPrice' => $user->getTotalCart(),
-           'comment' => $validatedData['comment'] ?? null
-        ]);
+        $result = $this->orderService->createOrder($user, $validatedData);
+
+        if ($result['result'] === false) {
+            return response()->json([
+                'result' => false,
+                'message' => $result['message']
+            ]);
+        }
 
         return response()->json([
             'result' => true,
