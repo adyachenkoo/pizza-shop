@@ -38,7 +38,7 @@ Route::prefix('user')->middleware('auth:api')->group(function () {
     });
 });
 
-Route::prefix('admin')->middleware('auth:api')->group(function () {
+Route::prefix('admin')->middleware(['auth:api', 'isAdmin'])->group(function () {
     Route::prefix('product')->controller(AdminProductController::class)->group(function () {
         Route::post('/create', 'store');
         Route::put('/update/{id}', 'update');
@@ -46,6 +46,7 @@ Route::prefix('admin')->middleware('auth:api')->group(function () {
     });
 
     Route::prefix('order')->controller('')->group(function () {
+        Route::get('/', [AdminOrderController::class, 'getAllOrders']);
         Route::post('/update', [AdminOrderController::class, 'updateStatus']);
     });
 });

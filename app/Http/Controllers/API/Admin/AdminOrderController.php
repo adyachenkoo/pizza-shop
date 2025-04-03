@@ -3,15 +3,23 @@
 namespace App\Http\Controllers\API\Admin;
 
 use App\Http\Requests\Order\UpdateRequest;
+use App\Models\Order;
 use App\Services\OrderService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class AdminOrderController
 {
     public function __construct(
         private readonly OrderService $orderService
     ) {
+    }
+
+    public function getAllOrders(): JsonResponse
+    {
+        return response()->json([
+            'result' => true,
+            'data' => Order::all()
+        ]);
     }
 
     public function updateStatus(UpdateRequest $request): JsonResponse

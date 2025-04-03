@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\RolesEnum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -91,5 +92,10 @@ class User extends Authenticatable implements JWTSubject
         });
 
         return round($total, 2);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role_id === RolesEnum::ADMIN->value;
     }
 }
