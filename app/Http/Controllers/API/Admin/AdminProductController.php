@@ -24,7 +24,10 @@ class AdminProductController extends Controller
         try {
             $product = Product::create($validatedData);
 
-            return response()->json($product);
+            return response()->json([
+                'result' => true,
+                'data' => $product
+            ]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Не удалось создать продукт']);
         }
@@ -58,6 +61,6 @@ class AdminProductController extends Controller
      */
     public function delete(int $id): JsonResponse
     {
-        return response()->json((bool) Product::destroy($id));
+        return response()->json((bool)Product::destroy($id));
     }
 }

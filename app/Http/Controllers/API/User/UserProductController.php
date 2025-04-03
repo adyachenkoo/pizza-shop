@@ -15,6 +15,9 @@ class UserProductController extends UserBasedController
      */
     public function index(): JsonResponse
     {
-        return response()->json(Product::all());
+        return response()->json([
+            'result' => true,
+            'data' => Product::all()
+        ]);
     }
 }
