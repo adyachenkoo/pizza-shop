@@ -66,7 +66,7 @@ class CartService
         $categoryId = Product::where('id', $productId)
             ->value('category_id');
 
-        $count = CartProduct::where('user_id', $user->id)
+        $count = $user->cartProducts()
             ->where('category_id', $categoryId)
             ->where('product_id', '!=', $productId)
             ->sum('quantity');

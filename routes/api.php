@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\Admin\AdminOrderController;
 use App\Http\Controllers\API\Admin\AdminProductController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\User\UserCartController;
@@ -32,6 +33,7 @@ Route::prefix('user')->middleware('auth:api')->group(function () {
 
     Route::prefix('order')->group(function () {
        Route::get('/', [UserOrderController::class, 'getOrders']);
+       Route::get('/history', [UserOrderController::class, 'getHistory']);
        Route::post('/create', [UserOrderController::class, 'createOrder']);
     });
 });
@@ -41,5 +43,9 @@ Route::prefix('admin')->middleware('auth:api')->group(function () {
         Route::post('/create', 'store');
         Route::put('/update/{id}', 'update');
         Route::delete('/delete/{id}', 'delete');
+    });
+
+    Route::prefix('order')->controller('')->group(function () {
+        Route::post('/update', [AdminOrderController::class, 'updateStatus']);
     });
 });

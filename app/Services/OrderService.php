@@ -47,4 +47,24 @@ class OrderService
             'message' => 'Заказ создан'
         ];
     }
+
+    public function updateStatus(User $user, array $data): array
+    {
+
+        $result = $user->orders()
+            ->where('id', $data['order_id'])
+            ->update(['status_id' => $data['status_id']]);
+
+        if (empty($result)) {
+            return [
+                'result' => false,
+                'message' => 'Ошибка при создании заказа'
+            ];
+        }
+
+        return [
+            'result' => true,
+            'message' => 'Заказ создан'
+        ];
+    }
 }

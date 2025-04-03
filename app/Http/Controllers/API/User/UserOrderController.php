@@ -21,6 +21,17 @@ class UserOrderController extends UserBasedController
         return response()->json([
             'result' => true,
             'data' => Order::where('user_id', auth()->id())
+                ->whereIn('status_id', [2,3])
+                ->get()
+        ]);
+    }
+
+    public function getHistory()
+    {
+        return response()->json([
+            'result' => true,
+            'data' => Order::where('user_id', auth()->id())
+                ->where('status_id', 1)
                 ->get()
         ]);
     }
