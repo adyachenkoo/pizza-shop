@@ -6,19 +6,17 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class CreateProductTest extends TestCase
+class UpdateProductTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_create_product(): void
+    public function test_update_product(): void
     {
         $token = $this->getAuthToken();
 
-        $response = $this->post('/api/admin/product/create', [
-            'category_id' => 1,
-            'name' => 'Новая пизза',
-            'price' => 490,
-            'description' => 'lalalala'
+        $response = $this->put('/api/admin/product/update/4', [
+            'name' => 'name',
+            'price' => 499,
         ], [
             'Authorization' => 'Bearer ' . $token
         ]);
@@ -30,10 +28,11 @@ class CreateProductTest extends TestCase
         $response->assertJsonStructure([
             'result',
             'data' => [
+                'id',
                 'category_id',
                 'name',
                 'price',
-                'description',
+                'description'
             ]
         ]);
     }

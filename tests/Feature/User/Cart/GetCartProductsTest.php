@@ -1,20 +1,27 @@
 <?php
 
-namespace tests\Feature\User\Product;
+namespace Tests\Feature\User\Cart;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class GetProductsTest extends TestCase
+class GetCartProductsTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_get_products()
+    public function test_get_cart_products(): void
     {
-
         $token = $this->getAuthToken();
 
-        $response = $this->get('/api/user/product/', [
+        $this->post('/api/user/cart/add', [
+            'product_id' => 1,
+            'quantity' => 5
+        ], [
+            'Authorization' => 'Bearer ' . $token
+        ]);
+
+        $response = $this->get('/api/user/cart', [
             'Authorization' => 'Bearer ' . $token
         ]);
 
@@ -27,10 +34,10 @@ class GetProductsTest extends TestCase
             'data' => [
                 '*' => [
                     'id',
+                    'user_id',
+                    'product_id',
+                    'quantity',
                     'category_id',
-                    'name',
-                    'price',
-                    'description'
                 ]
             ]
         ]);
