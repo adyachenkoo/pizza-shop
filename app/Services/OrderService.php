@@ -58,13 +58,13 @@ class OrderService
         if (empty($result)) {
             return [
                 'result' => false,
-                'message' => 'Ошибка при создании заказа'
+                'message' => 'Ошибка при обновлении статуса заказа'
             ];
         }
 
         return [
             'result' => true,
-            'message' => 'Заказ создан'
+            'message' => 'Статус заказа обновлен'
         ];
     }
 }

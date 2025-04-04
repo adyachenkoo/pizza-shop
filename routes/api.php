@@ -42,7 +42,7 @@ Route::prefix('admin')->middleware(['auth:api', 'isAdmin'])->group(function () {
     Route::prefix('product')->controller(AdminProductController::class)->group(function () {
         Route::post('/create', 'store');
         Route::put('/update/{id}', 'update');
-        Route::delete('/delete/{id}', 'delete');
+        Route::delete('/delete/', 'delete');
     });
 
     Route::prefix('order')->controller('')->group(function () {

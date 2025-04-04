@@ -22,12 +22,22 @@ class UserOrderController extends UserBasedController
      */
     public function getOrders(): JsonResponse
     {
-        return response()->json([
-            'result' => true,
-            'data' => Order::where('user_id', auth()->id())
-                ->whereIn('status_id', [2,3])
-                ->get()
-        ]);
+        try {
+            return response()->json([
+                'result' => true,
+                'data' => Order::where('user_id', auth()->id())
+                    ->whereIn('status_id', [2,3])
+                    ->get()
+            ]);
+        } catch (\Exception $e) {
+            logger()->error('Возникла ошибка при получении списка заказов: ', ['error' => $e->getMessage()]);
+
+            return response()->json([
+                'result' => false,
+                'error' => 'Ошибка сервера при получении списка заказов',
+            ], 500);
+        }
+
     }
 
     /**
@@ -37,12 +47,22 @@ class UserOrderController extends UserBasedController
      */
     public function getHistory(): JsonResponse
     {
-        return response()->json([
-            'result' => true,
-            'data' => Order::where('user_id', auth()->id())
-                ->where('status_id', 1)
-                ->get()
-        ]);
+        try {
+            return response()->json([
+                'result' => true,
+                'data' => Order::where('user_id', auth()->id())
+                    ->where('status_id', 1)
+                    ->get()
+            ]);
+        } catch (\Exception $e) {
+            logger()->error('Возникла ошибка при получении истории заказов: ', ['error' => $e->getMessage()]);
+
+            return response()->json([
+                'result' => false,
+                'error' => 'Ошибка сервера при получении истории заказов',
+            ], 500);
+        }
+
     }
 
     /**
@@ -55,20 +75,29 @@ class UserOrderController extends UserBasedController
     {
         $validatedData = $request->validated();
 
-        $user = auth()->user();
+        try {
+            $user = auth()->user();
 
-        $result = $this->orderService->createOrder($user, $validatedData);
+            $result = $this->orderService->createOrder($user, $validatedData);
 
-        if ($result['result'] === false) {
+            if ($result['result'] === false) {
+                return response()->json([
+                    'result' => false,
+                    'message' => $result['message']
+                ]);
+            }
+
             return response()->json([
-                'result' => false,
+                'result' => true,
                 'message' => $result['message']
             ]);
-        }
+        } catch (\Exception $e) {
+            logger()->error('Возникла ошибка при создании заказа: ', ['error' => $e->getMessage()]);
 
-        return response()->json([
-            'result' => true,
-            'message' => 'Заказ успешно создан'
-        ]);
+            return response()->json([
+                'result' => false,
+                'error' => 'Ошибка сервера при создании заказа',
+            ], 500);
+        }
     }
 }

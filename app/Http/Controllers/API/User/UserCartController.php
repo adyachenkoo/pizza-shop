@@ -26,15 +26,24 @@ class UserCartController extends UserBasedController
      */
     public function getUserCart(): JsonResponse
     {
-        $userId = Auth::id();
+        try {
+            $user = auth()->user();
 
-        $cartItems = CartProduct::where('user_id', $userId)
-            ->get();
+            $cartItems = $user->cartProducts;
 
-        return response()->json([
-            'result' => true,
-            'data' => $cartItems,
-        ]);
+            return response()->json([
+                'result' => true,
+                'data' => $cartItems,
+            ]);
+        } catch (\Exception $e) {
+            logger()->error('Возникла ошибка при получении корзины: ', ['error' => $e->getMessage()]);
+
+            return response()->json([
+                'result' => false,
+                'error' => 'Ошибка сервера при получении корзины',
+            ], 500);
+        }
+
     }
 
     /**
@@ -50,7 +59,6 @@ class UserCartController extends UserBasedController
         $validatedData = $request->validated();
 
         try {
-
             $result = $this->cartService->addProduct(
                 $user,
                 $validatedData['product_id'],
@@ -68,8 +76,13 @@ class UserCartController extends UserBasedController
                 'result' => true,
                 'message' => 'Товар добавлен в корзину'
             ]);
-        } catch(\ErrorException $e) {
-            return response()->json($e, 500);
+        } catch(\Exception $e) {
+            logger()->error('Возникла ошибка при добавлении товара в корзину: ', ['error' => $e->getMessage()]);
+
+            return response()->json([
+                'result' => false,
+                'error' => 'Ошибка сервера при добавлении товара в корзину',
+            ], 500);
         }
     }
 
@@ -81,23 +94,33 @@ class UserCartController extends UserBasedController
      */
     public function deleteProduct(DeleteRequest $request): JsonResponse
     {
-        $userId = Auth::id();
+        $user = auth()->user();
 
         $validatedData = $request->validated();
 
         try {
-            CartProduct::where([
-                'user_id' => $userId,
-                'product_id' => $validatedData['product_id']
-            ])
+            $result = $user->cartProducts()
+                ->where(['product_id' => $validatedData['product_id']])
                 ->delete();
+
+            if (empty($result)) {
+                return response()->json([
+                    'result' => false,
+                    'message' => 'Возникла ошибка при удалении товара из корзины',
+                ]);
+            }
 
             return response()->json([
                 'result' => true,
                 'message' => 'Товар удален'
             ]);
-        } catch(QueryException $e) {
-            return response()->json($e, 500);
+        } catch(\Exception $e) {
+            logger()->error('Возникла ошибка при удалении товара из корзины: ', ['error' => $e->getMessage()]);
+
+            return response()->json([
+                'result' => false,
+                'error' => 'Ошибка сервера при удалении товара из корзины',
+            ], 500);
         }
     }
 }
