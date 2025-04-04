@@ -14,6 +14,11 @@ class AdminOrderController
     ) {
     }
 
+    /**
+     * Метод для получения всех заказов
+     *
+     * @return JsonResponse
+     */
     public function getAllOrders(): JsonResponse
     {
         return response()->json([
@@ -22,6 +27,12 @@ class AdminOrderController
         ]);
     }
 
+    /**
+     * Метод для обновления статуса заказа
+     *
+     * @param UpdateRequest $request
+     * @return JsonResponse
+     */
     public function updateStatus(UpdateRequest $request): JsonResponse
     {
         $validatedData = $request->validated();

@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\API\User;
 
-use App\Enums\OrderStatusEnum;
 use App\Http\Requests\Order\StoreRequest;
-use App\Models\CartProduct;
 use App\Models\Order;
 use App\Services\OrderService;
-use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
 
 class UserOrderController extends UserBasedController
 {
@@ -16,7 +14,13 @@ class UserOrderController extends UserBasedController
     ) {
 
     }
-    public function getOrders()
+
+    /**
+     * Получение пользовательских заказов в работе
+     *
+     * @return JsonResponse
+     */
+    public function getOrders(): JsonResponse
     {
         return response()->json([
             'result' => true,
@@ -26,7 +30,12 @@ class UserOrderController extends UserBasedController
         ]);
     }
 
-    public function getHistory()
+    /**
+     * Получение истории заказов пользователя
+     *
+     * @return JsonResponse
+     */
+    public function getHistory(): JsonResponse
     {
         return response()->json([
             'result' => true,
@@ -36,7 +45,13 @@ class UserOrderController extends UserBasedController
         ]);
     }
 
-    public function createOrder(StoreRequest $request)
+    /**
+     * Создание заказа
+     *
+     * @param StoreRequest $request
+     * @return JsonResponse
+     */
+    public function createOrder(StoreRequest $request): JsonResponse
     {
         $validatedData = $request->validated();
 

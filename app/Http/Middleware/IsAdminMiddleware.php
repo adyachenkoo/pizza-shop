@@ -7,7 +7,14 @@ use Illuminate\Http\Request;
 
 class IsAdminMiddleware
 {
-    public function handle(Request $request, Closure $next)
+    /**
+     * Проверка является ли пользователь админом
+     *
+     * @param Request $request
+     * @param Closure $next
+     * @return mixed
+     */
+    public function handle(Request $request, Closure $next): mixed
     {
         if (!$request->user() || !$request->user()->isAdmin()) {
             return response()->json([

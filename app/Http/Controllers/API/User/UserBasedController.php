@@ -6,6 +6,11 @@ use App\Models\User;
 
 class UserBasedController
 {
+    /**
+     * Получение  юзера
+     *
+     * @return User
+     */
     public function getUser(): User
     {
         if (!auth('jwt')->check()) {
