@@ -12,7 +12,7 @@ class DeleteProductTest extends TestCase
 
     public function test_delete_product(): void
     {
-        $token = $this->getAuthToken();
+        $token = $this->getAuthToken(true);
 
         $response = $this->delete('/api/admin/product/delete', [
             'product_id' => 5

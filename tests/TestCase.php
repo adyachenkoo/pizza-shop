@@ -8,10 +8,14 @@ abstract class TestCase extends BaseTestCase
 {
     protected $seed = true;
 
-    protected function getAuthToken()
+    /**
+     * @param $isAdmin
+     * @return mixed
+     */
+    protected function getAuthToken($isAdmin)
     {
         $response = $this->postJson('/api/auth/login', [
-            'email' => 'test@example.com',
+            'email' => $isAdmin ? 'admin@example.com' : 'user@example.com',
             'password' => 'password'
         ]);
 

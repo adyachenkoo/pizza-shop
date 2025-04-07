@@ -6,17 +6,16 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class AddProductToCartTest extends TestCase
+class DeleteProductFromCartTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_add_product_to_cart(): void
+    public function test_delete_product_from_cart(): void
     {
         $token = $this->getAuthToken(false);
 
-        $response = $this->post('/api/user/cart/add', [
-            'product_id' => 1,
-            'quantity' => 5
+        $response = $this->delete('/api/user/cart/delete', [
+            'product_id' => 3,
         ], [
             'Authorization' => 'Bearer ' . $token
         ]);

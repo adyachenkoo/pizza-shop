@@ -12,7 +12,7 @@ class GetCartProductsTest extends TestCase
 
     public function test_get_cart_products(): void
     {
-        $token = $this->getAuthToken();
+        $token = $this->getAuthToken(false);
 
         $this->post('/api/user/cart/add', [
             'product_id' => 1,

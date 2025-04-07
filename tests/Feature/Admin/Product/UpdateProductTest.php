@@ -12,7 +12,7 @@ class UpdateProductTest extends TestCase
 
     public function test_update_product(): void
     {
-        $token = $this->getAuthToken();
+        $token = $this->getAuthToken(true);
 
         $response = $this->put('/api/admin/product/update/4', [
             'name' => 'name',

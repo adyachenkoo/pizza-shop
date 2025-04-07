@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\CartProduct;
 use App\Models\Category;
 use App\Models\OrderStatus;
 use App\Models\Product;
@@ -29,9 +30,15 @@ class DatabaseSeeder extends Seeder
         ]);
 
         User::factory()->create([
-            'firstname' => 'Test User',
-            'email' => 'test@example.com',
+            'firstname' => 'Test Admin',
+            'email' => 'admin@example.com',
             'role_id' => 2
+        ]);
+
+        User::factory()->create([
+            'firstname' => 'Test User',
+            'email' => 'user@example.com',
+            'role_id' => 1
         ]);
 
         Category::insert([
@@ -87,6 +94,26 @@ class DatabaseSeeder extends Seeder
                 'id' => '3',
                 'name' => 'Preparing'
             ]
+        ]);
+
+        CartProduct::insert([
+            [
+                'user_id' => 1,
+                'product_id' => 3,
+                'quantity' => 1
+            ], [
+                'user_id' => 1,
+                'product_id' => 4,
+                'quantity' => 1
+            ], [
+                'user_id' => 2,
+                'product_id' => 3,
+                'quantity' => 1
+            ], [
+                'user_id' => 2,
+                'product_id' => 4,
+                'quantity' => 1
+            ],
         ]);
     }
 }

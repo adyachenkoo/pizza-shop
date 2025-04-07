@@ -12,7 +12,7 @@ class CreateProductTest extends TestCase
 
     public function test_create_product(): void
     {
-        $token = $this->getAuthToken();
+        $token = $this->getAuthToken(true);
 
         $response = $this->post('/api/admin/product/create', [
             'category_id' => 1,

@@ -12,7 +12,7 @@ class GetProductsTest extends TestCase
     public function test_get_products()
     {
 
-        $token = $this->getAuthToken();
+        $token = $this->getAuthToken(false);
 
         $response = $this->get('/api/user/product/', [
             'Authorization' => 'Bearer ' . $token
