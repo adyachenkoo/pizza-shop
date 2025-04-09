@@ -9,7 +9,7 @@ use App\Models\User;
 
 class CartProduct extends Model
 {
-    protected $table = "cartProducts";
+    protected $table = "cart_product";
 
     public $timestamps = false;
 

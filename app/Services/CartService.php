@@ -3,72 +3,89 @@
 namespace App\Services;
 
 use App\Enums\CategoryEnum;
-use App\Models\CartProduct;
-use App\Models\Category;
+use App\Models\Cart;
 use App\Models\Product;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Collection;
 
 class CartService
 {
     /**
      * Добавить продукт в корзину
-     * @param User $user
      * @param int $productId
      * @param int $quantity
-     * @return Collection
+     * @param array $cookie
+     * @return array
      */
-    public function addProduct(User $user, int $productId, int $quantity): array
+    public function addProduct(int $productId, int $quantity, array $cookie): array
     {
-        $canAddProduct = $this->checkLimit($user, $productId, $quantity);
+        if (auth()->check()) {
+            $user = auth()->user();
+
+            $cart = $user->cart()
+                ->firstOrCreate([]);
+        } else {
+            $guestToken = $cookie['guest_token'] ?? generate_guest_token();
+
+            $cart = Cart::firstOrCreate([
+                'guest_token' => $guestToken
+            ]);
+        }
+
+        $canAddProduct = $this->checkLimit($cart, $productId, $quantity);
 
         if(!$canAddProduct) {
             return [
                 'result' => false,
-                'message' => 'Превышен допустимый лимит этой категории товаров'
+                'message' => 'Превышен допустимый лимит этой категории товаров',
+                'guest_token' => $guestToken ?? null,
+
             ];
         }
 
-        $cartProduct = $user->cartProducts()
-            ->where('product_id', $productId)
+        $existingProduct = $cart->products()
+            ->where(['product_id' => $productId])
             ->first();
 
-        if ($cartProduct) {
-            $cartProduct->update(['quantity' => $quantity]);
+        if ($existingProduct) {
+            $cart->products()->updateExistingPivot($productId, ['quantity' => $quantity]);
 
             return [
                 'result' => true,
-                'message' => 'Количество товара увеличено'
+                'message' => 'Количество товара увеличено',
+                'guest_token' => $guestToken ?? null,
             ];
         }
 
         $category = Product::where('id', $productId)
             ->value('category_id');
 
-        $user->cartProducts()->create([
-            'user_id' => $user->id,
-            'product_id' => $productId,
+        $cart->products()->attach($productId, [
             'category_id' => $category,
             'quantity' => $quantity,
         ]);
 
         return [
             'result' => true,
-            'message' => 'Товар добавлен в корзину'
+            'message' => 'Товар добавлен в корзину',
+            'guest_token' => $guestToken ?? null,
         ];
     }
 
     /**
      * Проверка лимитов на добавление продукта в корзину
+     * @param Cart $cart
+     * @param int $productId
+     * @param int $quantity
+     * @return bool
      */
-    public function checkLimit(User $user, int $productId, int $quantity): bool
+    public function checkLimit(Cart $cart, int $productId, int $quantity): bool
     {
         $categoryId = Product::where('id', $productId)
             ->value('category_id');
 
-        $count = $user->cartProducts()
-            ->where('category_id', $categoryId)
-            ->where('product_id', '!=', $productId)
+        $count = $cart->products()
+            ->wherePivot('category_id', $categoryId)
+            ->wherePivot('product_id', '!=', $productId)
             ->sum('quantity');
 
         $category = CategoryEnum::from($categoryId);

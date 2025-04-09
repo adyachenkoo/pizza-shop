@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class OrderProduct extends Model
 {
-    protected $table = "orderProducts";
+    protected $table = "order_product";
 
     protected $guarded = [];
 

@@ -6,9 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrderStatus extends Model
 {
-    protected $table = "orderStatuses";
+    protected $table = "order_statuses";
 
-    protected $fillable = [
-        'name'
-    ];
+    protected $guarded = [];
 }

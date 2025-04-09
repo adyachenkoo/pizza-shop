@@ -4,11 +4,10 @@ namespace App\Http\Controllers\API\User;
 
 use App\Http\Requests\Cart\AddRequest;
 use App\Http\Requests\Cart\DeleteRequest;
-use App\Models\CartProduct;
+use App\Models\Cart;
 use App\Services\CartService;
-use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class UserCartController extends UserBasedController
 {
@@ -21,20 +20,35 @@ class UserCartController extends UserBasedController
 
     /**
      * Получение товаров из корзины пользователя
-     *
+     * @param Request $request
      * @return JsonResponse
      */
-    public function getUserCart(): JsonResponse
+    public function getUserCart(Request $request): JsonResponse
     {
         try {
-            $user = auth()->user();
+            if (auth('api')->check()) {
+                $user = auth('api')->user();
 
-            $cartItems = $user->cartProducts;
+                $cart = $user->cart()->firstOrCreate([]);
+
+                $cartItems = $cart->products;
+            } else {
+                $guestToken = $request->cookie('guest_token') ?? generate_guest_token();
+
+                $cart = Cart::firstOrCreate([
+                    'guest_token' => $guestToken,
+                ]);
+
+                $cartItems = $cart->products;
+            }
 
             return response()->json([
                 'result' => true,
-                'data' => $cartItems,
-            ]);
+                'data' => [
+                    'cart_id' => $cart->id,
+                    'items' => $cartItems
+                ],
+            ])->cookie('guest_token', $guestToken ?? null, 60 * 24 * 30);
         } catch (\Exception $e) {
             logger()->error('Возникла ошибка при получении корзины: ', ['error' => $e->getMessage()]);
 
@@ -43,7 +57,6 @@ class UserCartController extends UserBasedController
                 'error' => 'Ошибка сервера при получении корзины',
             ], 500);
         }
-
     }
 
     /**
@@ -54,28 +67,26 @@ class UserCartController extends UserBasedController
      */
     public function addProduct(AddRequest $request): JsonResponse
     {
-        $user = Auth::user();
-
         $validatedData = $request->validated();
 
         try {
             $result = $this->cartService->addProduct(
-                $user,
                 $validatedData['product_id'],
-                $validatedData['quantity']
+                $validatedData['quantity'],
+                $request->cookie()
             );
 
             if ($result['result'] === false) {
                 return response()->json([
                     'result' => false,
                     'message' => $result['message']
-                ]);
+                ])->cookie('guest_token', $result['guest_token'] ?? null, 60 * 24 * 30);
             }
 
             return response()->json([
                 'result' => true,
                 'message' => 'Товар добавлен в корзину'
-            ]);
+            ])->cookie('guest_token', $result['guest_token'] ?? null, 60 * 24 * 30);
         } catch(\Exception $e) {
             logger()->error('Возникла ошибка при добавлении товара в корзину: ', ['error' => $e->getMessage()]);
 
@@ -94,12 +105,21 @@ class UserCartController extends UserBasedController
      */
     public function deleteProduct(DeleteRequest $request): JsonResponse
     {
-        $user = auth()->user();
+        if (auth('api')->check()) {
+            $user = auth('api')->user();
+
+            $cart = $user->cart()->firstOrCreate([]);
+        } else {
+            $guestToken = $request->cookie('guest_token') ?? null;
+
+            $cart = Cart::where('guest_token', $guestToken)
+                ->firstOrFail();
+        }
 
         $validatedData = $request->validated();
 
         try {
-            $result = $user->cartProducts()
+            $result = $cart->products()
                 ->where(['product_id' => $validatedData['product_id']])
                 ->delete();
 
@@ -107,13 +127,13 @@ class UserCartController extends UserBasedController
                 return response()->json([
                     'result' => false,
                     'message' => 'Возникла ошибка при удалении товара из корзины',
-                ]);
+                ])->cookie('guest_token', $guestToken ?? null, 60 * 24 * 30);
             }
 
             return response()->json([
                 'result' => true,
                 'message' => 'Товар удален'
-            ]);
+            ])->cookie('guest_token', $guestToken ?? null, 60 * 24 * 30);
         } catch(\Exception $e) {
             logger()->error('Возникла ошибка при удалении товара из корзины: ', ['error' => $e->getMessage()]);
 

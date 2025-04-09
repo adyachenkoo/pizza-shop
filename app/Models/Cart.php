@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Order extends Model
+class Cart extends Model
 {
-    protected $table = "orders";
+    protected $table = "carts";
 
     protected $guarded = [];
 
@@ -19,7 +19,8 @@ class Order extends Model
 
     public function products(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class, 'order_product')
-            ->withPivot('quantity');
+        return $this->belongsToMany(Product::class, 'cart_product')
+            ->withPivot('quantity')
+            ->withPivot('category_id');
     }
 }

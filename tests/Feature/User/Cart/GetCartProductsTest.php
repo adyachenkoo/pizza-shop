@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\User\Cart;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -10,20 +11,23 @@ class GetCartProductsTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_get_cart_products(): void
+    public function setUp(): void
     {
-        $token = $this->getAuthToken(false);
+        parent::setUp();
+
+        $user = User::factory()->create();
+
+        $this->actingAs($user);
 
         $this->post('/api/user/cart/add', [
             'product_id' => 1,
             'quantity' => 5
-        ], [
-            'Authorization' => 'Bearer ' . $token
         ]);
+    }
 
-        $response = $this->get('/api/user/cart', [
-            'Authorization' => 'Bearer ' . $token
-        ]);
+    public function test_get_cart_products(): void
+    {
+        $response = $this->get('/api/user/cart');
 
         $response->assertOk();
 
@@ -32,12 +36,15 @@ class GetCartProductsTest extends TestCase
         $response->assertJsonStructure([
             'result',
             'data' => [
-                '*' => [
-                    'id',
-                    'user_id',
-                    'product_id',
-                    'quantity',
-                    'category_id',
+                'cart_id',
+                'items' => [
+                    '*' => [
+                        'id',
+                        'user_id',
+                        'product_id',
+                        'quantity',
+                        'category_id',
+                    ]
                 ]
             ]
         ]);

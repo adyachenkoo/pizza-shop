@@ -20,21 +20,21 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
     Route::post('refresh', 'refresh');
 });
 
-Route::prefix('user')->middleware('auth:api')->group(function () {
-    Route::prefix('product')->controller(AdminProductController::class)->group(function () {
-        Route::get('/', [UserProductController::class, 'index']);
+Route::prefix('user')->group(function () {
+    Route::prefix('product')->controller(UserProductController::class)->group(function () {
+        Route::get('/', 'index');
     });
 
     Route::prefix('cart')->controller(UserCartController::class)->group(function () {
-        Route::get('/', [UserCartController::class, 'getUserCart']);
-        Route::post('/add', [UserCartController::class, 'addProduct']);
-        Route::delete('/delete', [UserCartController::class, 'deleteProduct']);
+        Route::get('/', 'getUserCart');
+        Route::post('/add', 'addProduct');
+        Route::delete('/delete', 'deleteProduct');
     });
 
-    Route::prefix('order')->group(function () {
-       Route::get('/', [UserOrderController::class, 'getOrders']);
-       Route::get('/history', [UserOrderController::class, 'getHistory']);
-       Route::post('/create', [UserOrderController::class, 'createOrder']);
+    Route::prefix('order')->controller(UserOrderController::class)->group(function () {
+       Route::get('/', 'getOrders');
+       Route::get('/history', 'getHistory');
+       Route::post('/create', 'createOrder');
     });
 });
 
