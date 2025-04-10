@@ -32,7 +32,8 @@ Route::prefix('user')->group(function () {
         Route::delete('/delete', 'deleteProduct');
     });
 
-    Route::prefix('order')->controller(UserOrderController::class)->group(function () {
+    Route::prefix('order')->controller(UserOrderController::class)->middleware(['auth:api'])
+        ->group(function () {
        Route::get('/', 'getOrders');
        Route::get('/history', 'getHistory');
        Route::post('/create', 'createOrder');

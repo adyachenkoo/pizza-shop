@@ -19,7 +19,7 @@ class DeleteProductFromCartTest extends TestCase
 
         $user = User::factory()->create();
 
-        $this->actingAs($user);
+        $this->actingAs($user, 'api');
 
         $this->post('/api/user/cart/add', [
             'product_id' => 3,
@@ -27,7 +27,7 @@ class DeleteProductFromCartTest extends TestCase
         ]);
     }
 
-    public function test_delete_product_from_cart(): void
+    public function test_delete_product_from_cart_by_user(): void
     {
         $response = $this->delete('/api/user/cart/delete', [
             'product_id' => 3,

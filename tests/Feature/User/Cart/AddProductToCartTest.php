@@ -17,10 +17,10 @@ class AddProductToCartTest extends TestCase
 
         $user = User::factory()->create();
 
-        $this->actingAs($user);
+        $this->actingAs($user, 'api');
     }
 
-    public function test_add_product_to_cart(): void
+    public function test_add_product_to_cart_by_user(): void
     {
         $response = $this->post('/api/user/cart/add', [
             'product_id' => 1,

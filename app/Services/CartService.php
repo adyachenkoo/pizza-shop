@@ -5,7 +5,6 @@ namespace App\Services;
 use App\Enums\CategoryEnum;
 use App\Models\Cart;
 use App\Models\Product;
-use App\Models\User;
 
 class CartService
 {
@@ -41,11 +40,7 @@ class CartService
             ];
         }
 
-        $category = Product::where('id', $productId)
-            ->value('category_id');
-
         $cart->products()->attach($productId, [
-            'category_id' => $category,
             'quantity' => $quantity,
         ]);
 
@@ -68,7 +63,7 @@ class CartService
             ->value('category_id');
 
         $count = $cart->products()
-            ->wherePivot('category_id', $categoryId)
+            ->where('products.category_id', $categoryId)
             ->wherePivot('product_id', '!=', $productId)
             ->sum('quantity');
 

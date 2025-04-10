@@ -2,22 +2,22 @@
 
 namespace Tests\Feature\Admin\Product;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class DeleteProductTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_delete_product(): void
+    public function test_delete_product_by_admin(): void
     {
-        $token = $this->getAuthToken(true);
+        $user = User::factory()->admin()->create();
+
+        $this->actingAs($user, 'api');
 
         $response = $this->delete('/api/admin/product/delete', [
             'product_id' => 5
-        ], [
-            'Authorization' => 'Bearer ' . $token
         ]);
 
         $response->assertOk();

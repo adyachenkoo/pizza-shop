@@ -17,7 +17,7 @@ class GetCartProductsTest extends TestCase
 
         $user = User::factory()->create();
 
-        $this->actingAs($user);
+        $this->actingAs($user, 'api');
 
         $this->post('/api/user/cart/add', [
             'product_id' => 1,
@@ -25,7 +25,7 @@ class GetCartProductsTest extends TestCase
         ]);
     }
 
-    public function test_get_cart_products(): void
+    public function test_get_cart_products_by_user(): void
     {
         $response = $this->get('/api/user/cart');
 
@@ -40,10 +40,11 @@ class GetCartProductsTest extends TestCase
                 'items' => [
                     '*' => [
                         'id',
-                        'user_id',
-                        'product_id',
-                        'quantity',
                         'category_id',
+                        'name',
+                        'price',
+                        'description',
+                        'pivot'
                     ]
                 ]
             ]

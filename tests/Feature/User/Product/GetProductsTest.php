@@ -9,14 +9,9 @@ class GetProductsTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_get_products()
+    public function test_get_products_by_guest()
     {
-
-        $token = $this->getAuthToken(false);
-
-        $response = $this->get('/api/user/product/', [
-            'Authorization' => 'Bearer ' . $token
-        ]);
+        $response = $this->get('/api/user/product/');
 
         $response->assertOk();
 
