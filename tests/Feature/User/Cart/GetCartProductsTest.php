@@ -19,7 +19,7 @@ class GetCartProductsTest extends TestCase
 
         $this->actingAs($user, 'api');
 
-        $this->post('/api/user/cart/add', [
+        $this->postJson('/api/user/cart/add', [
             'product_id' => 1,
             'quantity' => 5
         ]);
@@ -27,11 +27,9 @@ class GetCartProductsTest extends TestCase
 
     public function test_get_cart_products_by_user(): void
     {
-        $response = $this->get('/api/user/cart');
+        $response = $this->getJson('/api/user/cart');
 
-        $response->assertOk();
-
-        $response->assertJsonPath('result', true);
+        $response->assertOk()->assertJsonPath('result', true);
 
         $response->assertJsonStructure([
             'result',

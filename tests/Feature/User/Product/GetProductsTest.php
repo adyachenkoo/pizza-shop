@@ -11,11 +11,9 @@ class GetProductsTest extends TestCase
 
     public function test_get_products_by_guest()
     {
-        $response = $this->get('/api/user/product/');
+        $response = $this->getJson('/api/user/product/');
 
-        $response->assertOk();
-
-        $response->assertJsonPath('result', true);
+        $response->assertOk()->assertJsonPath('result', true);
 
         $response->assertJsonStructure([
             'result',

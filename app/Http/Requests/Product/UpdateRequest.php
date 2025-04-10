@@ -14,11 +14,20 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category_id' => 'int',
-            'name' => 'string',
-            'price' => 'int',
-            'description' => 'string',
+            'category_id' => 'sometimes|int',
+            'name' => 'sometimes|string',
+            'price' => 'sometimes|int',
+            'description' => 'sometimes|string',
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            if (!$this->hasAny(['category_id', 'name', 'price', 'description'])) {
+                $validator->errors()->add('fields', 'Хотя бы одно из полей должно быть заполнено: category_id, name, price, description.');
+            }
+        });
     }
 
     public function messages(): array

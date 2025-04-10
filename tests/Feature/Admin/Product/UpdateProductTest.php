@@ -10,20 +10,23 @@ class UpdateProductTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_update_product_by_admin(): void
+    public function setUp(): void
     {
+        parent::setUp();
+
         $user = User::factory()->admin()->create();
 
         $this->actingAs($user, 'api');
+    }
 
+    public function test_update_product_by_admin(): void
+    {
         $response = $this->put('/api/admin/product/update/4', [
             'name' => 'name',
             'price' => 499,
         ]);
 
-        $response->assertOk();
-
-        $response->assertJsonPath('result', true);
+        $response->assertOk()->assertJsonPath('result', true);
 
         $response->assertJsonStructure([
             'result',
@@ -35,5 +38,12 @@ class UpdateProductTest extends TestCase
                 'description'
             ]
         ]);
+    }
+
+    public function test_cant_update_product_without_data()
+    {
+        $response = $this->putJson('/api/admin/product/update/4');
+
+        $response->assertStatus(422);
     }
 }

@@ -22,13 +22,18 @@ class AddProductToCartTest extends TestCase
 
     public function test_add_product_to_cart_by_user(): void
     {
-        $response = $this->post('/api/user/cart/add', [
+        $response = $this->postJson('/api/user/cart/add', [
             'product_id' => 1,
             'quantity' => 5
         ]);
 
-        $response->assertOk();
+        $response->assertOk()->assertJsonPath('result', true);
+    }
 
-        $response->assertJsonPath('result', true);
+    public function test_cant_add_product_to_cart_without_data()
+    {
+        $response = $this->postJson('/api/user/cart/add');
+
+        $response->assertStatus(422);
     }
 }

@@ -11,15 +11,17 @@ class OrderService
 {
     public function createOrder(User $user, array $data): array
     {
-        if ($user->cartProducts->isEmpty()) {
+        if ($this->cartIsEmpty($user)) {
             return [
                 'result' => false,
                 'message' => 'Корзина пуста'
             ];
         }
 
-        DB::transaction(function () use ($user, $data) {
-            $cartProducts = $user->cartProducts;
+        try {
+            DB::beginTransaction();
+
+            $cartProducts = $user->cart->products;
 
             $order = Order::create([
                 'status_id' => OrderStatusEnum::PREPARING->value,
@@ -32,25 +34,36 @@ class OrderService
                 'comment' => $data['comment'] ?? null
             ]);
 
-            foreach ($cartProducts as $cartProduct) {
+            foreach ($cartProducts as $product) {
                 $order->products()->attach(
-                    $cartProduct->product_id,
-                    ['quantity' => $cartProduct->quantity]
+                    $product->id,
+                    ['quantity' => $product->pivot->quantity]
                 );
             }
 
-            $user->cartProducts()->delete();
-        });
+            $user->cart->products()->detach();
 
-        return [
-            'result' => true,
-            'message' => 'Заказ создан'
-        ];
+            DB::commit();
+
+            return [
+                'result' => true,
+                'message' => 'Заказ создан',
+                'data' => $order
+            ];
+        } catch(\Throwable $e) {
+            DB::rollBack();
+
+            logger()->error('Ошибка при создании заказа: ' . $e->getMessage());
+
+            return [
+                'result' => false,
+                'message' => 'Произошла ошибка при создании заказа.',
+            ];
+        }
     }
 
     public function updateStatus(User $user, array $data): array
     {
-
         $result = $user->orders()
             ->where('id', $data['order_id'])
             ->update(['status_id' => $data['status_id']]);
@@ -66,5 +79,10 @@ class OrderService
             'result' => true,
             'message' => 'Статус заказа обновлен'
         ];
+    }
+
+    public function cartIsEmpty(User $user): bool
+    {
+        return !$user->cart || !$user->cart->products()->exists();
     }
 }

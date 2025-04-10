@@ -11,12 +11,17 @@ class CreateProductTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_create_product_by_user(): void
+    public function setUp(): void
     {
+        parent::setUp();
+
         $user = User::factory()->admin()->create();
 
         $this->actingAs($user, 'api');
+    }
 
+    public function test_create_product_by_user(): void
+    {
         $response = $this->post('/api/admin/product/create', [
             'category_id' => 1,
             'name' => 'Новая пизза',
@@ -24,9 +29,7 @@ class CreateProductTest extends TestCase
             'description' => 'lalalala'
         ]);
 
-        $response->assertOk();
-
-        $response->assertJsonPath('result', true);
+        $response->assertOk()->assertJsonPath('result', true);
 
         $response->assertJsonStructure([
             'result',
@@ -37,5 +40,12 @@ class CreateProductTest extends TestCase
                 'description',
             ]
         ]);
+    }
+
+    public function test_cant_create_product_without_data()
+    {
+        $response = $this->postJson('/api/admin/product/create');
+
+        $response->assertStatus(422);
     }
 }

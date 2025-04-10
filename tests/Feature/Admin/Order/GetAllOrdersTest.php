@@ -1,13 +1,13 @@
 <?php
 
-namespace Tests\Feature\User\Order;
+namespace Tests\Feature\Admin\Order;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class CreateOrderTest extends TestCase
+class GetAllOrdersTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -15,34 +15,36 @@ class CreateOrderTest extends TestCase
     {
         parent::setUp();
 
-        $user = User::factory()->create();
+        $user = User::factory()->admin()->create();
 
         $this->actingAs($user, 'api');
-    }
 
-    public function test_create_order_test(): void
-    {
         $this->postJson('/api/user/cart/add', [
             'product_id' => 1,
             'quantity' => 5
         ]);
 
-        $response = $this->postJson('/api/user/order/create', [
+        $this->postJson('/api/user/order/create', [
             'address' => 'NewYork, Trump st. 115',
             'phoneNumber' => '+9133782288',
             'deliveryTime' => '01:30'
         ]);
+    }
+
+    public function test_get_all_orders_by_admin(): void
+    {
+        $response = $this->getJson('api/admin/order');
 
         $response->assertOk()->assertJsonPath('result', true);
     }
 
-    public function test_cant_create_order_with_empty_cart()
+    public function test_user_cannot_get_all_orders()
     {
-        $response = $this->postJson('/api/user/order/create', [
-            'address' => 'NewYork, Trump st. 115',
-            'phoneNumber' => '+9133782288',
-            'deliveryTime' => '01:30'
-        ]);
+        $user = User::factory()->create();
+
+        $this->actingAs($user, 'api');
+
+        $response = $this->getJson('/api/admin/order');
 
         $response->assertOk()->assertJsonPath('result', false);
     }

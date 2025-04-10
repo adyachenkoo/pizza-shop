@@ -21,7 +21,7 @@ class DeleteProductFromCartTest extends TestCase
 
         $this->actingAs($user, 'api');
 
-        $this->post('/api/user/cart/add', [
+        $this->postJson('/api/user/cart/add', [
             'product_id' => 3,
             'quantity' => 5
         ]);
@@ -29,12 +29,17 @@ class DeleteProductFromCartTest extends TestCase
 
     public function test_delete_product_from_cart_by_user(): void
     {
-        $response = $this->delete('/api/user/cart/delete', [
+        $response = $this->deleteJson('/api/user/cart/delete', [
             'product_id' => 3,
         ]);
 
-        $response->assertOk();
+        $response->assertOk()->assertJsonPath('result', true);
+    }
 
-        $response->assertJsonPath('result', true);
+    public function test_cant_delete_product_without_data()
+    {
+        $response = $this->deleteJson('/api/user/cart/delete');
+
+        $response->assertStatus(422);
     }
 }

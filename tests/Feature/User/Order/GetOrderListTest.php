@@ -7,43 +7,36 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class CreateOrderTest extends TestCase
+class GetOrderListTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function setUp(): void
+    public function test_get_order_list_by_user(): void
     {
-        parent::setUp();
-
         $user = User::factory()->create();
 
         $this->actingAs($user, 'api');
-    }
 
-    public function test_create_order_test(): void
-    {
         $this->postJson('/api/user/cart/add', [
             'product_id' => 1,
             'quantity' => 5
         ]);
 
-        $response = $this->postJson('/api/user/order/create', [
+        $this->postJson('/api/user/order/create', [
             'address' => 'NewYork, Trump st. 115',
             'phoneNumber' => '+9133782288',
             'deliveryTime' => '01:30'
         ]);
+
+        $response = $this->getJson('api/user/order');
 
         $response->assertOk()->assertJsonPath('result', true);
     }
 
-    public function test_cant_create_order_with_empty_cart()
+    public function test_cant_get_order_list_by_unauthenticated()
     {
-        $response = $this->postJson('/api/user/order/create', [
-            'address' => 'NewYork, Trump st. 115',
-            'phoneNumber' => '+9133782288',
-            'deliveryTime' => '01:30'
-        ]);
+        $response = $this->getJson('api/user/order');
 
-        $response->assertOk()->assertJsonPath('result', false);
+        $response->assertStatus(401);
     }
 }

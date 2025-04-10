@@ -7,43 +7,45 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class CreateOrderTest extends TestCase
+class GetOrderHistoryTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function setUp(): void
+    public function test_get_order_history_by_user(): void
     {
-        parent::setUp();
-
         $user = User::factory()->create();
 
         $this->actingAs($user, 'api');
-    }
 
-    public function test_create_order_test(): void
-    {
         $this->postJson('/api/user/cart/add', [
             'product_id' => 1,
             'quantity' => 5
         ]);
 
-        $response = $this->postJson('/api/user/order/create', [
+        $this->postJson('/api/user/order/create', [
             'address' => 'NewYork, Trump st. 115',
             'phoneNumber' => '+9133782288',
             'deliveryTime' => '01:30'
         ]);
+
+        $token = $this->getAuthToken(true);
+
+        $this->postJson('/api/admin/order/update', [
+            'order_id' => 1,
+            'status_id' => 1,
+        ], [
+            'Authorization' => 'Bearer ' . $token
+        ]);
+
+        $response = $this->getJson('api/user/order/history');
 
         $response->assertOk()->assertJsonPath('result', true);
     }
 
-    public function test_cant_create_order_with_empty_cart()
+    public function test_cant_get_order_history_by_unauthenticated()
     {
-        $response = $this->postJson('/api/user/order/create', [
-            'address' => 'NewYork, Trump st. 115',
-            'phoneNumber' => '+9133782288',
-            'deliveryTime' => '01:30'
-        ]);
+        $response = $this->getJson('api/user/order/history');
 
-        $response->assertOk()->assertJsonPath('result', false);
+        $response->assertStatus(401);
     }
 }

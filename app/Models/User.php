@@ -83,13 +83,13 @@ class User extends Authenticatable implements JWTSubject
 
     public function orders(): HasMany
     {
-        return $this->hasMany(Order::class)->with('product');
+        return $this->hasMany(Order::class)->with('products');
     }
 
     public function getTotalCart(): float
     {
-        $total = $this->cartProducts->sum(function (CartProduct $cartProduct) {
-            return $cartProduct->product->price * $cartProduct->quantity;
+        $total = $this->cart->products->sum(function ($item) {
+            return $item->price * $item->pivot->quantity;
         });
 
         return round($total, 2);

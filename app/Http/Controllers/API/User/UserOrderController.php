@@ -89,7 +89,8 @@ class UserOrderController extends UserBasedController
 
             return response()->json([
                 'result' => true,
-                'message' => $result['message']
+                'message' => $result['message'],
+                'data' => $result['data'],
             ]);
         } catch (\Exception $e) {
             logger()->error('Возникла ошибка при создании заказа: ', ['error' => $e->getMessage()]);
