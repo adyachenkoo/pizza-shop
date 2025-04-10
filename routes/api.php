@@ -25,7 +25,8 @@ Route::prefix('user')->group(function () {
         Route::get('/', 'index');
     });
 
-    Route::prefix('cart')->controller(UserCartController::class)->group(function () {
+    Route::prefix('cart')->controller(UserCartController::class)->middleware(['attachCart'])
+        ->group(function () {
         Route::get('/', 'getUserCart');
         Route::post('/add', 'addProduct');
         Route::delete('/delete', 'deleteProduct');

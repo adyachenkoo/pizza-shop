@@ -13,31 +13,17 @@ class CartService
      * Добавить продукт в корзину
      * @param int $productId
      * @param int $quantity
-     * @param array $cookie
+     * @param Cart $cart
      * @return array
      */
-    public function addProduct(int $productId, int $quantity, array $cookie): array
+    public function addProduct(int $productId, int $quantity, Cart $cart): array
     {
-        if (auth()->check()) {
-            $user = auth()->user();
-
-            $cart = $user->cart()
-                ->firstOrCreate([]);
-        } else {
-            $guestToken = $cookie['guest_token'] ?? generate_guest_token();
-
-            $cart = Cart::firstOrCreate([
-                'guest_token' => $guestToken
-            ]);
-        }
-
         $canAddProduct = $this->checkLimit($cart, $productId, $quantity);
 
         if(!$canAddProduct) {
             return [
                 'result' => false,
                 'message' => 'Превышен допустимый лимит этой категории товаров',
-                'guest_token' => $guestToken ?? null,
 
             ];
         }
@@ -52,7 +38,6 @@ class CartService
             return [
                 'result' => true,
                 'message' => 'Количество товара увеличено',
-                'guest_token' => $guestToken ?? null,
             ];
         }
 
@@ -67,7 +52,6 @@ class CartService
         return [
             'result' => true,
             'message' => 'Товар добавлен в корзину',
-            'guest_token' => $guestToken ?? null,
         ];
     }
 

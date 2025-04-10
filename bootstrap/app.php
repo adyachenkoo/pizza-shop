@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\AttachCart;
 use App\Http\Middleware\IsAdminMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -14,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias(['isAdmin' => IsAdminMiddleware::class]);
+        $middleware->alias(['attachCart' => AttachCart::class]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
