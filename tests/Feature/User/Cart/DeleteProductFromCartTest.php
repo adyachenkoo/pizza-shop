@@ -33,6 +33,10 @@ class DeleteProductFromCartTest extends TestCase
             'product_id' => 3,
         ]);
 
+        $this->assertDatabaseMissing('cart_product', [
+            'product_id' => 3,
+        ]);
+
         $response->assertOk()->assertJsonPath('result', true);
     }
 

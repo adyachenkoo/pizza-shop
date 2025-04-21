@@ -34,6 +34,12 @@ class CreateOrderTest extends TestCase
         ]);
 
         $response->assertOk()->assertJsonPath('result', true);
+
+        $this->assertDatabaseHas('orders', [
+            'address' => 'NewYork, Trump st. 115',
+            'phoneNumber' => '+9133782288',
+            'deliveryTime' => '01:30'
+        ]);
     }
 
     public function test_cant_create_order_with_empty_cart()

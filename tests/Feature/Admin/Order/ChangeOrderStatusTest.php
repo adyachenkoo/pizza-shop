@@ -39,6 +39,11 @@ class ChangeOrderStatusTest extends TestCase
         ]);
 
         $response->assertOk()->assertJsonPath('result', true);
+
+        $this->assertDatabaseHas('orders', [
+            'id' => 1,
+            'status_id' => 2,
+        ]);
     }
 
     public function test_user_cannot_change_order_status()

@@ -38,6 +38,12 @@ class UpdateProductTest extends TestCase
                 'description'
             ]
         ]);
+
+        $this->assertDatabaseHas('products', [
+            'id' => 4,
+            'name' => 'name',
+            'price' => 499,
+        ]);
     }
 
     public function test_cant_update_product_without_data()

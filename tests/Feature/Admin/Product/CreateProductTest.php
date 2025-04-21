@@ -20,7 +20,7 @@ class CreateProductTest extends TestCase
         $this->actingAs($user, 'api');
     }
 
-    public function test_create_product_by_user(): void
+    public function test_create_product_by_admin(): void
     {
         $response = $this->post('/api/admin/product/create', [
             'category_name' => 'pizza',
@@ -39,6 +39,11 @@ class CreateProductTest extends TestCase
                 'price',
                 'description',
             ]
+        ]);
+
+        $this->assertDatabaseHas('products', [
+            'category_name' => 'pizza',
+            'name' => 'Новая пизза'
         ]);
     }
 

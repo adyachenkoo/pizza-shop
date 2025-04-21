@@ -28,6 +28,11 @@ class AddProductToCartTest extends TestCase
         ]);
 
         $response->assertOk()->assertJsonPath('result', true);
+
+        $this->assertDatabaseHas('cart_product', [
+            'product_id' => 1,
+            'quantity' => 5
+        ]);
     }
 
     public function test_cant_add_product_to_cart_without_data()
