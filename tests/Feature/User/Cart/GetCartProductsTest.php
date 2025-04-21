@@ -38,7 +38,7 @@ class GetCartProductsTest extends TestCase
                 'items' => [
                     '*' => [
                         'id',
-                        'category_id',
+                        'category_name',
                         'name',
                         'price',
                         'description',

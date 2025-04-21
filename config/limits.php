@@ -6,12 +6,12 @@ return [
      * Максимальное количество пицц в заказе
      */
 
-    'PIZZA' => env('MAX_PIZZA', 10),
+    'pizza' => env('MAX_PIZZA', 10),
 
     /**
      * Максимальное количество напитков в заказе
      */
 
-    'DRINK' => env('MAX_DRINK', 20),
+    'drink' => env('MAX_DRINK', 20),
 
 ];

@@ -23,7 +23,7 @@ class CreateProductTest extends TestCase
     public function test_create_product_by_user(): void
     {
         $response = $this->post('/api/admin/product/create', [
-            'category_id' => 1,
+            'category_name' => 'pizza',
             'name' => 'Новая пизза',
             'price' => 490,
             'description' => 'lalalala'
@@ -34,7 +34,7 @@ class CreateProductTest extends TestCase
         $response->assertJsonStructure([
             'result',
             'data' => [
-                'category_id',
+                'category_name',
                 'name',
                 'price',
                 'description',

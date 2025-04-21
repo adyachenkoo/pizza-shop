@@ -20,7 +20,7 @@ class GetProductsTest extends TestCase
             'data' => [
                 '*' => [
                     'id',
-                    'category_id',
+                    'category_name',
                     'name',
                     'price',
                     'description'

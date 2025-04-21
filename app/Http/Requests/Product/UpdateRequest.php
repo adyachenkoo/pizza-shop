@@ -14,7 +14,7 @@ class UpdateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category_id' => 'sometimes|int',
+            'category_name' => 'sometimes|string',
             'name' => 'sometimes|string',
             'price' => 'sometimes|int',
             'description' => 'sometimes|string',
@@ -24,8 +24,8 @@ class UpdateRequest extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            if (!$this->hasAny(['category_id', 'name', 'price', 'description'])) {
-                $validator->errors()->add('fields', 'Хотя бы одно из полей должно быть заполнено: category_id, name, price, description.');
+            if (!$this->hasAny(['category_name', 'name', 'price', 'description'])) {
+                $validator->errors()->add('fields', 'Хотя бы одно из полей должно быть заполнено: category_name, name, price, description.');
             }
         });
     }
@@ -33,7 +33,7 @@ class UpdateRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'category_id.int' => 'Категория должна быть числом',
+            'category_name.string' => 'Категория должна быть строкой',
             'name.string' => 'Имя должно быть строкой',
             'price.int' => 'Цена должна быть числом',
             'description.string' => 'Описание должно быть строкой',

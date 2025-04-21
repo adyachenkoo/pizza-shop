@@ -32,7 +32,7 @@ class UpdateProductTest extends TestCase
             'result',
             'data' => [
                 'id',
-                'category_id',
+                'category_name',
                 'name',
                 'price',
                 'description'

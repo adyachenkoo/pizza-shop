@@ -59,16 +59,14 @@ class CartService
      */
     public function checkLimit(Cart $cart, int $productId, int $quantity): bool
     {
-        $categoryId = Product::where('id', $productId)
-            ->value('category_id');
+        $category = Product::where('id', $productId)
+            ->value('category_name');
 
         $count = $cart->products()
-            ->where('products.category_id', $categoryId)
+            ->where('products.category_name', $category)
             ->wherePivot('product_id', '!=', $productId)
             ->sum('quantity');
 
-        $category = CategoryEnum::from($categoryId);
-
-        return $quantity + (int) $count <= config("limits.$category->name");
+        return $quantity + (int) $count <= config("limits.$category");
     }
 }

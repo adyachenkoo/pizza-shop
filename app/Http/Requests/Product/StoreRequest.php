@@ -14,7 +14,7 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category_id' => 'required|int',
+            'category_name' => 'required|string',
             'name' => 'required|string',
             'price' => 'required|int',
             'description' => 'required|string',
@@ -24,7 +24,7 @@ class StoreRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'category_id.required' => 'Вы не указали категорию товара',
+            'category_name.required' => 'Вы не указали категорию товара',
             'name.required' => 'Вы не указали название товара',
             'price.required' => 'Вы не указали цену товара',
             'description.required' => 'Вы не указали описание товара',

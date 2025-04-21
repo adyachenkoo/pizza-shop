@@ -100,7 +100,7 @@ class UserCartController extends UserBasedController
         try {
             $result = $cart->products()
                 ->where(['product_id' => $validatedData['product_id']])
-                ->delete();
+                ->detach();
 
             if (empty($result)) {
                 return response()->json([

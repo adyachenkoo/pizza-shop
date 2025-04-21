@@ -2,9 +2,9 @@
 
 namespace App\Enums;
 
-enum CategoryEnum: int
+enum CategoryEnum: string
 {
-    case PIZZA = 1;
-    case DRINK = 2;
+    case PIZZA = 'pizza';
+    case DRINK = 'drink';
 }
 
