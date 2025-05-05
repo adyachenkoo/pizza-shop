@@ -19,7 +19,7 @@ class CartService
     {
         $canAddProduct = $this->checkLimit($cart, $productId, $quantity);
 
-        if(!$canAddProduct) {
+        if (!$canAddProduct) {
             return [
                 'result' => false,
                 'message' => 'Превышен допустимый лимит этой категории товаров',

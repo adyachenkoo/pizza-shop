@@ -8,4 +8,3 @@ enum OrderStatusEnum: int
     case DELIVERING = 2;
     case PREPARING = 3;
 }
-

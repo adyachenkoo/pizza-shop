@@ -27,17 +27,17 @@ Route::prefix('user')->group(function () {
 
     Route::prefix('cart')->controller(UserCartController::class)->middleware(['attachCart'])
         ->group(function () {
-        Route::get('/', 'getUserCart');
-        Route::post('/add', 'addProduct');
-        Route::delete('/delete', 'deleteProduct');
-    });
+            Route::get('/', 'getUserCart');
+            Route::post('/add', 'addProduct');
+            Route::delete('/delete', 'deleteProduct');
+        });
 
     Route::prefix('order')->controller(UserOrderController::class)->middleware(['auth:api'])
         ->group(function () {
-       Route::get('/', 'getOrders');
-       Route::get('/history', 'getHistory');
-       Route::post('/create', 'createOrder');
-    });
+            Route::get('/', 'getOrders');
+            Route::get('/history', 'getHistory');
+            Route::post('/create', 'createOrder');
+        });
 });
 
 Route::prefix('admin')->middleware(['auth:api', 'isAdmin'])->group(function () {

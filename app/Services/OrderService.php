@@ -50,7 +50,7 @@ class OrderService
                 'message' => 'Заказ создан',
                 'data' => $order
             ];
-        } catch(\Throwable $e) {
+        } catch (\Throwable $e) {
             DB::rollBack();
 
             logger()->error('Ошибка при создании заказа: ' . $e->getMessage());

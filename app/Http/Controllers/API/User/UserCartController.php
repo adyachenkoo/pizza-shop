@@ -11,7 +11,6 @@ use Illuminate\Http\Request;
 
 class UserCartController extends UserBasedController
 {
-
     public function __construct(
         private readonly CartService $cartService
     ) {
@@ -75,7 +74,7 @@ class UserCartController extends UserBasedController
                 'result' => true,
                 'message' => 'Товар добавлен в корзину'
             ]);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             logger()->error('Возникла ошибка при добавлении товара в корзину: ', ['error' => $e->getMessage()]);
 
             return response()->json([
@@ -113,7 +112,7 @@ class UserCartController extends UserBasedController
                 'result' => true,
                 'message' => 'Товар удален'
             ]);
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             logger()->error('Возникла ошибка при удалении товара из корзины: ', ['error' => $e->getMessage()]);
 
             return response()->json([

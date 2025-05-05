@@ -11,7 +11,6 @@ use Illuminate\Routing\Controller;
 
 class AdminProductController extends Controller
 {
-
     /**
      * Метод для создания продукта
      *
@@ -25,7 +24,7 @@ class AdminProductController extends Controller
         try {
             $product = Product::create($validatedData);
 
-            if(empty($product)) {
+            if (empty($product)) {
                 return response()->json([
                     'result' => false,
                     'message' => 'Возникла ошибка при создании продукта',
@@ -89,7 +88,7 @@ class AdminProductController extends Controller
         try {
             $result = Product::destroy($validatedData['product_id']);
 
-            if(empty($result)) {
+            if (empty($result)) {
                 return response()->json([
                     'result' => false,
                     'message' => 'Возникла ошибка при удалении продукта',

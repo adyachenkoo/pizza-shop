@@ -7,7 +7,6 @@ use Illuminate\Http\JsonResponse;
 
 class UserProductController extends UserBasedController
 {
-
     /**
      * Получение списка продуктов
      *
