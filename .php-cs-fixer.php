@@ -9,7 +9,8 @@ $finder = (new Finder())
     ->append([
         __FILE__,
         __DIR__ . '/bin/console',
-    ]);;
+    ]);
+;
 
 return (new Config())
     ->setCacheFile(__DIR__ . '/var/.php-cs-fixer.cache')
