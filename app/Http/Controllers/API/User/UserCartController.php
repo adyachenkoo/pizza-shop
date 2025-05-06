@@ -9,7 +9,7 @@ use App\Services\CartService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class UserCartController extends UserBasedController
+final readonly class UserCartController
 {
     public function __construct(
         private readonly CartService $cartService

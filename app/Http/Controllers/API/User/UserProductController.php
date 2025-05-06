@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API\User;
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 
-class UserProductController extends UserBasedController
+final readonly class UserProductController
 {
     /**
      * Получение списка продуктов

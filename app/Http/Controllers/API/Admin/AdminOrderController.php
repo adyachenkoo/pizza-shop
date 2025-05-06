@@ -7,7 +7,7 @@ use App\Models\Order;
 use App\Services\OrderService;
 use Illuminate\Http\JsonResponse;
 
-class AdminOrderController
+final readonly class AdminOrderController
 {
     public function __construct(
         private readonly OrderService $orderService
