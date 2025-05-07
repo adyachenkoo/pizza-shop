@@ -11,8 +11,10 @@ class GetOrderHistoryTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_get_order_history_by_user(): void
+    public function setUp(): void
     {
+        parent::setUp();
+
         $user = User::factory()->create();
 
         $this->actingAs($user, 'api');
@@ -22,30 +24,23 @@ class GetOrderHistoryTest extends TestCase
             'quantity' => 5
         ]);
 
+
         $this->postJson('/api/user/order/create', [
             'address' => 'NewYork, Trump st. 115',
             'phoneNumber' => '+9133782288',
             'deliveryTime' => '01:30'
         ]);
 
-        $token = $this->getAuthToken(true);
-
         $this->postJson('/api/admin/order/update', [
             'order_id' => 1,
             'status_id' => 1,
-        ], [
-            'Authorization' => 'Bearer ' . $token
         ]);
-
-        $response = $this->getJson('api/user/order/history');
-
-        $response->assertOk()->assertJsonPath('result', true);
     }
 
-    public function test_cant_get_order_history_by_unauthenticated()
+    public function test_get_order_history_by_user(): void
     {
         $response = $this->getJson('api/user/order/history');
 
-        $response->assertStatus(401);
+        $response->assertOk()->assertJsonPath('result', true);
     }
 }

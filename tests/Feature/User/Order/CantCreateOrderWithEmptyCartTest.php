@@ -7,10 +7,8 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
-class CreateOrderTest extends TestCase
+class CantCreateOrderWithEmptyCartTest extends TestCase
 {
-    use RefreshDatabase;
-
     public function setUp(): void
     {
         parent::setUp();
@@ -18,14 +16,9 @@ class CreateOrderTest extends TestCase
         $user = User::factory()->create();
 
         $this->actingAs($user, 'api');
-
-        $this->postJson('/api/user/cart/add', [
-            'product_id' => 1,
-            'quantity' => 5
-        ]);
     }
 
-    public function test_create_order_test(): void
+    public function test_cant_create_order_with_empty_cart(): void
     {
         $response = $this->postJson('/api/user/order/create', [
             'address' => 'NewYork, Trump st. 115',
@@ -33,12 +26,6 @@ class CreateOrderTest extends TestCase
             'deliveryTime' => '01:30'
         ]);
 
-        $response->assertOk()->assertJsonPath('result', true);
-
-        $this->assertDatabaseHas('orders', [
-            'address' => 'NewYork, Trump st. 115',
-            'phoneNumber' => '+9133782288',
-            'deliveryTime' => '01:30'
-        ]);
+        $response->assertOk()->assertJsonPath('result', false);
     }
 }

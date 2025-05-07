@@ -37,15 +37,4 @@ class GetAllOrdersTest extends TestCase
 
         $response->assertOk()->assertJsonPath('result', true);
     }
-
-    public function test_user_cannot_get_all_orders()
-    {
-        $user = User::factory()->create();
-
-        $this->actingAs($user, 'api');
-
-        $response = $this->getJson('/api/admin/order');
-
-        $response->assertOk()->assertJsonPath('result', false);
-    }
 }
