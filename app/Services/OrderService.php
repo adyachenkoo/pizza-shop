@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Contracts\OrderMailerInterface;
 use App\Enums\OrderStatusEnum;
 use App\Models\Order;
 use App\Models\User;
@@ -9,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 
 class OrderService
 {
+    public function __construct(public OrderMailerInterface $mailer) {}
+
     public function createOrder(User $user, array $data): array
     {
         if ($this->cartIsEmpty($user)) {
@@ -44,6 +47,8 @@ class OrderService
             $user->cart->products()->detach();
 
             DB::commit();
+
+            $this->mailer->sendOrderCreated($order);
 
             return [
                 'result' => true,

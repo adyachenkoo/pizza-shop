@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\User\Order;
 
+use App\Contracts\OrderMailerInterface;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class GetOrderHistoryTest extends TestCase
@@ -15,6 +15,10 @@ class GetOrderHistoryTest extends TestCase
     {
         parent::setUp();
 
+        $this->mock(OrderMailerInterface::class)
+            ->shouldReceive('sendOrderCreated')
+            ->once();
+
         $user = User::factory()->create();
 
         $this->actingAs($user, 'api');
@@ -23,7 +27,6 @@ class GetOrderHistoryTest extends TestCase
             'product_id' => 1,
             'quantity' => 5
         ]);
-
 
         $this->postJson('/api/user/order/create', [
             'address' => 'NewYork, Trump st. 115',

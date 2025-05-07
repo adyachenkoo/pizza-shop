@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\User\Order;
 
+use App\Contracts\OrderMailerInterface;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class CreateOrderTest extends TestCase
@@ -14,6 +14,10 @@ class CreateOrderTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+
+        $this->mock(OrderMailerInterface::class)
+            ->shouldReceive('sendOrderCreated')
+            ->once();
 
         $user = User::factory()->create();
 
