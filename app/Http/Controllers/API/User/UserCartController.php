@@ -37,7 +37,9 @@ final readonly class UserCartController
                 ],
             ]);
         } catch (\Exception $e) {
-            logger()->error('Возникла ошибка при получении корзины: ', ['error' => $e->getMessage()]);
+            logger()->error('Возникла ошибка при получении корзины: ' . $e->getMessage(), [
+                'exception' => $e
+            ]);
 
             return response()->json([
                 'result' => false,
@@ -75,7 +77,9 @@ final readonly class UserCartController
                 'message' => 'Товар добавлен в корзину'
             ]);
         } catch (\Exception $e) {
-            logger()->error('Возникла ошибка при добавлении товара в корзину: ', ['error' => $e->getMessage()]);
+            logger()->error('Возникла ошибка при добавлении товара в корзину: ' . $e->getMessage(), [
+                'exception' => $e
+            ]);
 
             return response()->json([
                 'result' => false,
@@ -113,7 +117,9 @@ final readonly class UserCartController
                 'message' => 'Товар удален'
             ]);
         } catch (\Exception $e) {
-            logger()->error('Возникла ошибка при удалении товара из корзины: ', ['error' => $e->getMessage()]);
+            logger()->error('Возникла ошибка при удалении товара из корзины: ' . $e->getMessage(), [
+                'exception' => $e
+            ]);
 
             return response()->json([
                 'result' => false,

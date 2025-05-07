@@ -20,7 +20,9 @@ final readonly class UserProductController
                 'data' => Product::all()
             ]);
         } catch (\Exception $e) {
-            logger()->error('Возникла ошибка при получении списка заказов: ', ['error' => $e->getMessage()]);
+            logger()->error('Возникла ошибка при получении списка заказов: ' . $e->getMessage(), [
+                'exception' => $e
+            ]);
 
             return response()->json([
                 'result' => false,

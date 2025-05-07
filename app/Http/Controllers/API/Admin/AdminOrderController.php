@@ -27,7 +27,9 @@ final readonly class AdminOrderController
                 'data' => Order::all()
             ]);
         } catch (\Exception $e) {
-            logger()->error('Возникла ошибка при получении списка заказов: ', ['error' => $e->getMessage()]);
+            logger()->error('Возникла ошибка при получении списка заказов: ' . $e->getMessage(), [
+                'exception' => $e
+            ]);
 
             return response()->json([
                 'result' => false,
@@ -63,7 +65,9 @@ final readonly class AdminOrderController
                 'message' => $result['message']
             ]);
         } catch (\Exception $e) {
-            logger()->error('Возникла ошибка при обновлении статуса заказа: ', ['error' => $e->getMessage()]);
+            logger()->error('Возникла ошибка при обновлении статуса заказа: ' . $e->getMessage(), [
+                'exception' => $e
+            ]);
 
             return response()->json([
                 'result' => false,

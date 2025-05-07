@@ -30,7 +30,9 @@ final readonly class UserOrderController
                     ->get()
             ]);
         } catch (\Exception $e) {
-            logger()->error('Возникла ошибка при получении списка заказов: ', ['error' => $e->getMessage()]);
+            logger()->error('Возникла ошибка при получении списка заказов: ' . $e->getMessage(), [
+                'exception' => $e
+            ]);
 
             return response()->json([
                 'result' => false,
@@ -55,7 +57,9 @@ final readonly class UserOrderController
                     ->get()
             ]);
         } catch (\Exception $e) {
-            logger()->error('Возникла ошибка при получении истории заказов: ', ['error' => $e->getMessage()]);
+            logger()->error('Возникла ошибка при получении истории заказов: ' . $e->getMessage(), [
+                'exception' => $e
+            ]);
 
             return response()->json([
                 'result' => false,
@@ -93,7 +97,9 @@ final readonly class UserOrderController
                 'data' => $result['data'],
             ]);
         } catch (\Exception $e) {
-            logger()->error('Возникла ошибка при создании заказа: ', ['error' => $e->getMessage()]);
+            logger()->error('Возникла ошибка при создании заказа: ' . $e->getMessage(), [
+                'exception' => $e
+            ]);
 
             return response()->json([
                 'result' => false,

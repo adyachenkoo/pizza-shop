@@ -35,7 +35,9 @@ final readonly class AdminProductController
                 'data' => $product
             ]);
         } catch (\Exception $e) {
-            logger()->error('Возникла ошибка при создании продукта: ', ['error' => $e->getMessage()]);
+            logger()->error('Возникла ошибка при создании продукта: ' . $e->getMessage(), [
+                'exception' => $e
+            ]);
 
             return response()->json([
                 'result' => false,
@@ -65,7 +67,9 @@ final readonly class AdminProductController
                 'data' => $product->fresh(),
             ]);
         } catch (\Exception $e) {
-            logger()->error('Возникла ошибка при обновлении продукта: ', ['error' => $e->getMessage()]);
+            logger()->error('Возникла ошибка при обновлении продукта: ' . $e->getMessage(), [
+                'exception' => $e
+            ]);
 
             return response()->json([
                 'result' => false,
@@ -99,7 +103,9 @@ final readonly class AdminProductController
                 'message' => 'Товар удален',
             ]);
         } catch (\Exception $e) {
-            logger()->error('Возникла ошибка при удалении продукта: ', ['error' => $e->getMessage()]);
+            logger()->error('Возникла ошибка при удалении продукта: ' . $e->getMessage(), [
+                'exception' => $e
+            ]);
 
             return response()->json([
                 'result' => false,

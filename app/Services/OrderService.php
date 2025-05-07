@@ -53,7 +53,9 @@ class OrderService
         } catch (\Throwable $e) {
             DB::rollBack();
 
-            logger()->error('Ошибка при создании заказа: ' . $e->getMessage());
+            logger()->error('Ошибка при создании заказа: ' . $e->getMessage(), [
+                'exception' => $e
+            ]);
 
             return [
                 'result' => false,
