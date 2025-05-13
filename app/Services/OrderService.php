@@ -4,13 +4,16 @@ namespace App\Services;
 
 use App\Contracts\OrderMailerInterface;
 use App\Enums\OrderStatusEnum;
+use App\Jobs\OrderCreatedSendTelegram;
 use App\Models\Order;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 
 class OrderService
 {
-    public function __construct(public OrderMailerInterface $mailer) {}
+    public function __construct(public OrderMailerInterface $mailer)
+    {
+    }
 
     public function createOrder(User $user, array $data): array
     {
@@ -32,7 +35,7 @@ class OrderService
                 'address' => $data['address'],
                 'phoneNumber' => $data['phoneNumber'],
                 'deliveryTime' => $data['deliveryTime'],
-                'email' => $data['email'] ?? null,
+                'email' => $data['email'] ?? $user->email,
                 'totalPrice' => $user->getTotalCart(),
                 'comment' => $data['comment'] ?? null
             ]);
@@ -49,6 +52,8 @@ class OrderService
             DB::commit();
 
             $this->mailer->sendOrderCreated($order);
+
+            OrderCreatedSendTelegram::dispatch($order);
 
             return [
                 'result' => true,
