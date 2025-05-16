@@ -18,6 +18,7 @@ class OrderCreatedSendTelegram implements ShouldQueue
     public function handle(): void
     {
         $chatId = config('telegram.chat_id');
+
         $message = "Создан новый заказ:\nАдрес:{$this->order->address}\nEmail:{$this->order->email}\nСумма заказа:{$this->order->totalPrice}\nКомментарий:{$this->order->comment}";
 
         Telegram::sendMessage([

@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Contracts\OrderMailerInterface;
 use App\Enums\OrderStatusEnum;
+use App\Jobs\OrderCreatedSendEmail;
 use App\Jobs\OrderCreatedSendTelegram;
 use App\Models\Order;
 use App\Models\User;
@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class OrderService
 {
-    public function __construct(public OrderMailerInterface $mailer)
+    public function __construct()
     {
     }
 
@@ -51,7 +51,7 @@ class OrderService
 
             DB::commit();
 
-            $this->mailer->sendOrderCreated($order);
+            OrderCreatedSendEmail::dispatch($order);
 
             OrderCreatedSendTelegram::dispatch($order);
 
