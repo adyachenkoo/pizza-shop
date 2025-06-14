@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Order;
 
+use App\Rules\ValidPhoneNumber;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRequest extends FormRequest
@@ -23,7 +24,7 @@ class StoreRequest extends FormRequest
     {
         return [
             'address' => 'required|string',
-            'phoneNumber' => 'required|string',
+            'phoneNumber' => ['required', 'string', new ValidPhoneNumber],
             'email' => 'string',
             'comment' => 'string',
             'deliveryTime' => 'required|date_format:H:i'
