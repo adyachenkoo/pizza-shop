@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\Admin\AdminOrderController;
 use App\Http\Controllers\API\Admin\AdminProductController;
+use App\Http\Controllers\API\Admin\Report\Product\ProductReportController;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\User\UserCartController;
 use App\Http\Controllers\API\User\UserOrderController;
@@ -47,8 +48,14 @@ Route::prefix('admin')->middleware(['auth:api', 'isAdmin'])->group(function () {
         Route::delete('/delete/', 'delete');
     });
 
-    Route::prefix('order')->controller('')->group(function () {
-        Route::get('/', [AdminOrderController::class, 'getAllOrders']);
-        Route::post('/update', [AdminOrderController::class, 'updateStatus']);
+    Route::prefix('order')->controller(AdminOrderController::class)->group(function () {
+        Route::get('/', 'getAllOrders');
+        Route::post('/update', 'updateStatus');
+    });
+
+    Route::prefix('report')->group(function () {
+       Route::prefix('product')->controller(ProductReportController::class)->group(function () {
+           Route::get('/top-selling-pizza/{year}/{month}', 'BestSellingPizzaOfMonthReport');
+       }) ;
     });
 });
