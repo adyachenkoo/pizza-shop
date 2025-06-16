@@ -3,8 +3,12 @@
 namespace Tests\Feature\Admin\Order;
 
 use App\Contracts\OrderMailerInterface;
+use App\Jobs\OrderCreatedSendEmail;
+use App\Jobs\OrderCreatedSendTelegram;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class ChangeOrderStatusTest extends TestCase
@@ -15,9 +19,7 @@ class ChangeOrderStatusTest extends TestCase
     {
         parent::setUp();
 
-        $this->mock(OrderMailerInterface::class)
-            ->shouldReceive('sendOrderCreated')
-            ->once();
+        Bus::fake();
 
         $user = User::factory()->admin()->create();
 
@@ -30,7 +32,7 @@ class ChangeOrderStatusTest extends TestCase
 
         $this->postJson('/api/user/order/create', [
             'address' => 'NewYork, Trump st. 115',
-            'phoneNumber' => '+9133782288',
+            'phoneNumber' => '+79133782288',
             'deliveryTime' => '01:30'
         ]);
     }

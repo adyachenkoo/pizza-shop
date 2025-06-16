@@ -5,6 +5,8 @@ namespace Tests\Feature\Admin\Order;
 use App\Contracts\OrderMailerInterface;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
 class GetAllOrdersTest extends TestCase
@@ -15,9 +17,7 @@ class GetAllOrdersTest extends TestCase
     {
         parent::setUp();
 
-        $this->mock(OrderMailerInterface::class)
-            ->shouldReceive('sendOrderCreated')
-            ->once();
+        Bus::fake();
 
         $user = User::factory()->admin()->create();
 

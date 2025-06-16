@@ -22,7 +22,7 @@ class CantCreateOrderWithEmptyCartTest extends TestCase
     {
         $response = $this->postJson('/api/user/order/create', [
             'address' => 'NewYork, Trump st. 115',
-            'phoneNumber' => '+9133782288',
+            'phoneNumber' => '+79133782288',
             'deliveryTime' => '01:30'
         ]);
 
